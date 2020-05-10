@@ -1,0 +1,8 @@
+{
+  "libs": ["browser"],
+  "plugins" : {
+ 	"phaser" : {},
+ 	"doc_comment": {}
+  },
+  "auto_complete_triggers": [ {"selector": "text.html", "characters": "<"}, {"selector": "source.js", "characters": "."} ]
+}
