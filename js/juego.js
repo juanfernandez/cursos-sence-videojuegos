@@ -23,11 +23,14 @@ var nave;
 var balas;
 var malos;
 var aparecer;
-var delay = 400;
+var delay = 150;
 var timer = 0;
 var fireRate = delay;//delay
 var nextFire = timer;//timer
-
+var puntos;
+var vidas;
+var txtPuntos;
+var txtVidas;
 var Iniciar = {
     preload: function () {
         juego.load.image("nave", "imagenes/nave.png");
@@ -71,6 +74,15 @@ var Iniciar = {
 
         //Ciclo de enemigos
         aparecer = juego.time.events.loop(1500, this.crearEnemigo, this);
+
+        //Lógica de puntaje y vidas
+        puntos = 0;
+        juego.add.text(20, 20, "Puntos:", { font: "14px Arial", fill: "#fff" });
+        txtPuntos = juego.add.text(80, 20, "0", { font: "14px Arial", fill: "#fff" });
+        //Vidas
+        vidas = 5;
+        juego.add.text(326, 20, "Vidas:", { font: "14px Arial", fill: "#fff" });
+        txtVidas = juego.add.text(366, 20, "5", { font: "14px Arial", fill: "#fff" });
     },
     update: function () {
         //Animar juego
@@ -85,6 +97,19 @@ var Iniciar = {
 
         //Colisión de rocas y balas
         juego.physics.arcade.overlap(balas, malos, this.colision, null, this);
+
+        //Colisión que quita vidas
+        malos.forEachAlive(function (m) {
+            if (m.position.x > 10 && m.position.x < 22) {
+                vidas -= 1;
+                txtVidas.text = vidas;
+            }
+        });
+
+        //Lógica de GAME OVER
+        if (vidas == 0) {
+            juego.state.start("Terminado");
+        }
     },
     //Función disparar una sola bala
     disparar: function () {
@@ -102,7 +127,7 @@ var Iniciar = {
         var num = Math.floor(Math.random() * 10 + 1);
         enem.reset(400, num * 55);
         enem.anchor.setTo(0.5);
-        enem.body.velocity.x = -100;
+        enem.body.velocity.x = -450;
         enem.checkWorldBounds = true;
         enem.outOfBoundsKill = true;
     },
@@ -110,5 +135,7 @@ var Iniciar = {
     colision: function (bala, malo) {
         bala.kill();
         malo.kill();
+        puntos++;
+        txtPuntos.text = puntos;
     }
 };
